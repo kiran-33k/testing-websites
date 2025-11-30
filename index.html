@@ -1,0 +1,3108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#007aff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ExpenseWise">
+    <title>ExpenseWise - Ultra Glass UI</title>
+    
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23007aff' width='180' height='180' rx='40'/><text x='90' y='130' font-size='100' text-anchor='middle'>💰</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+        }
+
+        body.dark {
+            background: #0a0a0a;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ULTRA GLASS EFFECT - Maximum Transparency */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a1a;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --accent: #007aff;
+            --success: #34c759;
+            --error: #ff3b30;
+        }
+
+        .dark {
+            --glass-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #707070;
+            --accent: #0a84ff;
+            --success: #30d158;
+            --error: #ff453a;
+        }
+
+        /* ULTRA Glass Effect - Maximum Blur & Transparency */
+        .glass {
+            background: var(--glass-bg) !important;
+            backdrop-filter: blur(60px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(60px) saturate(200%) !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Animated Background - More Vibrant */
+        .waves-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            opacity: 0.5;
+        }
+
+        .dark .waves-background {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            opacity: 0.7;
+        }
+
+        .wave-1, .wave-2, .wave-3 {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent);
+            filter: blur(80px);
+        }
+
+        .wave-1 {
+            width: 600px;
+            height: 600px;
+            top: -15%;
+            right: -15%;
+            animation: float 25s ease-in-out infinite;
+        }
+
+        .wave-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -10%;
+            left: -10%;
+            animation: float 30s ease-in-out infinite reverse;
+        }
+
+        .wave-3 {
+            width: 450px;
+            height: 450px;
+            top: 40%;
+            left: 40%;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 40px) scale(1.1); }
+        }
+
+        /* Pages */
+        .page {
+            display: none !important;
+            min-height: 100vh;
+            padding: 0 20px 140px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .page.active {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* Lock Screen */
+        .lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            z-index: 999;
+            background: #f8f9fa;
+        }
+
+        .dark .lock-screen {
+            background: #0a0a0a;
+        }
+
+        .lock-screen.active {
+            display: flex !important;
+        }
+
+        .locked .page {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        .locked #lockPage {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .lock-content {
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        .lock-icon-wrap {
+            width: 110px;
+            height: 110px;
+            border-radius: 28px;
+            margin: 0 auto 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark .lock-icon-wrap {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .lock-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .lock-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .pin-dots {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 70px;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .dark .pin-dot {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .pin-dot.filled {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.2);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .numpad-key {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--text);
+            font-size: 28px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.15s ease;
+        }
+
+        .dark .numpad-key {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .numpad-key:active {
+            transform: scale(0.95);
+        }
+
+        .numpad-key.primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.15s ease;
+        }
+
+        .dark .icon-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Dashboard Glass Card */
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border-radius: 28px;
+            padding: 28px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            margin-bottom: 24px;
+        }
+
+        .dark .dashboard-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .balance-section {
+            text-align: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 24px;
+        }
+
+        .dark .balance-section {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .balance-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .balance-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: -2px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .dark .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .stat-icon-wrap.income {
+            background: rgba(52, 199, 89, 0.2);
+            color: var(--success);
+        }
+
+        .stat-icon-wrap.expense {
+            background: rgba(255, 59, 48, 0.2);
+            color: var(--error);
+        }
+
+        .stat-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /* Transaction Items */
+        .transaction-wrapper {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .transaction-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            cursor: grab;
+            position: relative;
+            touch-action: pan-y;
+        }
+
+        .dark .transaction-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .transaction-item:active {
+            cursor: grabbing;
+        }
+
+        .transaction-item.swiping {
+            transition: none;
+        }
+
+        .delete-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: var(--error);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 20px;
+            color: white;
+            font-weight: 700;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .transaction-wrapper.deleting .delete-bg {
+            opacity: 1;
+        }
+
+        .trans-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .dark .trans-icon {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .trans-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .trans-description {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text);
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .trans-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .trans-amount {
+            font-weight: 800;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .trans-amount.income {
+            color: var(--success);
+        }
+
+        .trans-amount.expense {
+            color: var(--error);
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark .bottom-nav {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            border-radius: 16px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active {
+            background: rgba(0, 122, 255, 0.2);
+            color: var(--accent);
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 40px rgba(0, 122, 255, 0.5);
+            cursor: pointer;
+            z-index: 99;
+            transition: transform 0.2s ease;
+        }
+
+        .fab:active {
+            transform: scale(0.92);
+        }
+
+        .fab.hidden {
+            display: none;
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .card {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            display: flex;
+            align-items: flex-end;
+            z-index: 200;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            border-radius: 28px 28px 0 0;
+            padding: 28px 24px 40px;
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.2);
+            max-height: 88vh;
+            overflow-y: auto;
+        }
+
+        .dark .modal-content {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* PIN Change Page */
+        .pin-change-page {
+            position: fixed;
+            inset: 0;
+            z-index: 250;
+            display: none;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .dark .pin-change-page {
+            background: #0a0a0a;
+        }
+
+        .pin-change-page.show {
+            display: block;
+        }
+
+        .pin-change-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+        }
+
+        .dark .pin-change-header {
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .pin-change-back {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px);
+            -webkit-backdrop-filter: blur(60px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .dark .pin-change-back {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .pin-change-content {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .pin-stage-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .stage-line {
+            height: 3px;
+            width: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .dark .stage-line {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stage-line.active {
+            background: var(--accent);
+            width: 60px;
+        }
+
+        /* Alert */
+        .alert-overlay {
+            position: fixed !important;
+            inset: 0 !important;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            padding: 20px;
+        }
+
+        .alert-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 28px 24px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark .alert-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .alert-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .alert-icon.error {
+            background: rgba(255, 59, 48, 0.2);
+            color: var(--error);
+        }
+
+        .alert-icon.success {
+            background: rgba(52, 199, 89, 0.2);
+            color: var(--success);
+        }
+
+        .alert-icon.warning {
+            background: rgba(255, 159, 67, 0.2);
+            color: #ff9f43;
+        }
+
+        .alert-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .alert-message {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .alert-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .alert-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+        }
+
+        .alert-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .alert-btn.secondary {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .alert-btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Form Fields */
+        .form-field {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 14px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 500;
+            outline: none;
+        }
+
+        .dark .form-field {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-field:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+        }
+
+        .field-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            border-radius: 14px;
+            background: var(--accent);
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .tag-btn {
+            padding: 12px 24px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: var(--text);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .dark .tag-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tag-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        /* Settings Item */
+        .settings-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark .settings-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .settings-item:active {
+            transform: scale(0.98);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .dark .empty-icon {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Search Bar */
+        .search-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 500;
+            outline: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark .search-input {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .dark .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 6px;
+            transition: width 0.4s ease;
+        }
+
+        /* Filter Dropdown */
+        .filter-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+            min-width: 150px;
+        }
+
+        .dark .filter-dropdown {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .filter-dropdown.show {
+            display: block;
+        }
+
+        .filter-option {
+            padding: 12px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .filter-option:active {
+            background: rgba(0, 122, 255, 0.2);
+        }
+
+        .filter-option.active {
+            background: rgba(0, 122, 255, 0.2);
+            color: var(--accent);
+        }
+
+        /* Heading */
+        .heading {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        /* Bar Chart */
+        .bar-chart {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .dark .bar-chart {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar {
+            width: 100%;
+            max-width: 80px;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+
+        .bar.income {
+            background: linear-gradient(180deg, var(--success), rgba(52, 199, 89, 0.6));
+        }
+
+        .bar.expense {
+            background: linear-gradient(180deg, var(--error), rgba(255, 59, 48, 0.6));
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .bar-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Hide Nav on Lock */
+        .locked .bottom-nav,
+        .locked .fab {
+            display: none !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .scroll-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app" id="app">
+        <!-- Animated Glass Background -->
+        <div class="waves-background">
+            <div class="wave-1"></div>
+            <div class="wave-2"></div>
+            <div class="wave-3"></div>
+        </div>
+
+        <!-- Lock Screen -->
+        <div id="lockPage" class="page active lock-screen">
+            <div class="lock-content">
+                <div class="lock-icon-wrap">
+                    <span class="material-symbols-rounded" style="font-size: 52px; color: var(--accent);">lock</span>
+                </div>
+                
+                <h1 class="lock-title" id="lockTitle">Enter PIN</h1>
+                <p class="lock-subtitle" id="lockSubtitle">Enter your 4-digit security PIN</p>
+                
+                <div class="pin-dots">
+                    <div class="pin-dot" id="dot1"></div>
+                    <div class="pin-dot" id="dot2"></div>
+                    <div class="pin-dot" id="dot3"></div>
+                    <div class="pin-dot" id="dot4"></div>
+                </div>
+
+                <div class="numpad">
+                    <button class="numpad-key" onclick="pinAdd('1')">1</button>
+                    <button class="numpad-key" onclick="pinAdd('2')">2</button>
+                    <button class="numpad-key" onclick="pinAdd('3')">3</button>
+                    <button class="numpad-key" onclick="pinAdd('4')">4</button>
+                    <button class="numpad-key" onclick="pinAdd('5')">5</button>
+                    <button class="numpad-key" onclick="pinAdd('6')">6</button>
+                    <button class="numpad-key" onclick="pinAdd('7')">7</button>
+                    <button class="numpad-key" onclick="pinAdd('8')">8</button>
+                    <button class="numpad-key" onclick="pinAdd('9')">9</button>
+                    <button class="numpad-key" onclick="pinDel()">
+                        <span class="material-symbols-rounded" style="font-size: 26px;">backspace</span>
+                    </button>
+                    <button class="numpad-key" onclick="pinAdd('0')">0</button>
+                    <button class="numpad-key primary" onclick="pinSubmit()">
+                        <span class="material-symbols-rounded" style="font-size: 26px;">check</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div id="homePage" class="page">
+            <div class="header">
+                <h1 class="brand">ExpenseWise</h1>
+                <div class="icon-btn" onclick="lockApp()">
+                    <span class="material-symbols-rounded" style="font-size: 22px;">lock</span>
+                </div>
+            </div>
+
+            <!-- Glass Dashboard -->
+            <div class="dashboard-container">
+                <div class="balance-section">
+                    <div class="balance-label">Total Balance</div>
+                    <div class="balance-value" id="totalBalance">₹0.00</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-icon-wrap income">
+                            <span class="material-symbols-rounded" style="font-size: 20px;">arrow_upward</span>
+                        </div>
+                        <div class="stat-title">INCOME</div>
+                        <div class="stat-number" id="totalIncome">₹0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon-wrap expense">
+                            <span class="material-symbols-rounded" style="font-size: 20px;">arrow_downward</span>
+                        </div>
+                        <div class="stat-title">EXPENSES</div>
+                        <div class="stat-number" id="totalExpense">₹0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="heading" style="margin: 0;">Recent Activity</h2>
+                    <button onclick="navigateTo('transactions')" style="background: none; border: none; color: var(--accent); font-weight: 700; font-size: 16px; cursor: pointer;">View All</button>
+                </div>
+                <div id="recentTrans"></div>
+            </div>
+        </div>
+
+        <!-- Transactions Page -->
+        <div id="transactionsPage" class="page">
+            <div class="header">
+                <h1 class="brand">Transactions</h1>
+                <div class="icon-btn" onclick="lockApp()">
+                    <span class="material-symbols-rounded" style="font-size: 22px;">lock</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 24px; position: relative;">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search transactions..." oninput="searchTransactions()">
+                <div style="margin-top: 14px;">
+                    <div style="position: relative; display: inline-block;">
+                        <button class="tag-btn" id="filterBtn" onclick="toggleFilterDropdown()">
+                            <span class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle; margin-right: 6px;">filter_list</span>
+                            <span id="filterText">All</span>
+                        </button>
+                        <div class="filter-dropdown" id="filterDropdown">
+                            <div class="filter-option active" onclick="selectFilter('all')">All Transactions</div>
+                            <div class="filter-option" onclick="selectFilter('income')">Income Only</div>
+                            <div class="filter-option" onclick="selectFilter('expense')">Expenses Only</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="allTrans"></div>
+        </div>
+
+        <!-- Reports Page -->
+        <div id="reportsPage" class="page">
+            <div class="header">
+                <h1 class="brand">Reports</h1>
+                <div class="icon-btn" onclick="lockApp()">
+                    <span class="material-symbols-rounded" style="font-size: 22px;">lock</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="heading" id="reportMonth">This Month</h3>
+                <div style="display: grid; gap: 18px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(40px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.35);">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(52, 199, 89, 0.2); display: flex; align-items: center; justify-content: center;">
+                                <span class="material-symbols-rounded" style="font-size: 26px; color: var(--success);">trending_up</span>
+                            </div>
+                            <span style="font-weight: 700; font-size: 17px; color: var(--text);">Income</span>
+                        </div>
+                        <span style="color: var(--success); font-weight: 800; font-size: 22px;" id="repIncome">₹0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(40px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.35);">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(255, 59, 48, 0.2); display: flex; align-items: center; justify-content: center;">
+                                <span class="material-symbols-rounded" style="font-size: 26px; color: var(--error);">trending_down</span>
+                            </div>
+                            <span style="font-weight: 700; font-size: 17px; color: var(--text);">Expenses</span>
+                        </div>
+                        <span style="color: var(--error); font-weight: 800; font-size: 22px;" id="repExpense">₹0</span>
+                    </div>
+                    <div style="padding-top: 16px; border-top: 2px solid rgba(255, 255, 255, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 800; font-size: 18px; color: var(--text);">Net Savings</span>
+                            <span style="font-weight: 800; font-size: 28px; color: var(--accent);" id="repSavings">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Chart -->
+            <div class="card">
+                <h3 class="heading">Income vs Expenses</h3>
+                <div class="bar-chart">
+                    <div class="chart-bars">
+                        <div class="bar-item">
+                            <div class="bar income" id="incomeBar" style="height: 0;">
+                                <div class="bar-value" id="incomeBarValue">₹0</div>
+                            </div>
+                            <div class="bar-label">Income</div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar expense" id="expenseBar" style="height: 0;">
+                                <div class="bar-value" id="expenseBarValue">₹0</div>
+                            </div>
+                            <div class="bar-label">Expenses</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="heading">Category Breakdown</h3>
+                <div id="catBreakdown"></div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="accountPage" class="page">
+            <div class="header">
+                <h1 class="brand">Settings</h1>
+                <div class="icon-btn" onclick="lockApp()">
+                    <span class="material-symbols-rounded" style="font-size: 22px;">lock</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 40px;">
+                <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.3); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 44px; font-weight: 700; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);">
+                    E
+                </div>
+                <h2 style="font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 6px;">ExpenseWise User</h2>
+                <p style="color: var(--text-secondary); font-size: 15px; font-weight: 500;">Personal Finance Manager</p>
+            </div>
+
+            <div class="settings-item" onclick="toggleTheme()">
+                <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.35); display: flex; align-items: center; justify-content: center;">
+                    <span class="material-symbols-rounded" id="themeIcon" style="font-size: 24px; color: var(--text);">dark_mode</span>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 16px; color: var(--text); margin-bottom: 2px;">Appearance</div>
+                    <div style="font-size: 14px; color: var(--text-secondary); font-weight: 500;" id="themeText">Switch to dark mode</div>
+                </div>
+                <span class="material-symbols-rounded" style="color: var(--text-tertiary); font-size: 20px;">chevron_right</span>
+            </div>
+
+            <div class="settings-item" onclick="openChangePinModal()">
+                <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.35); display: flex; align-items: center; justify-content: center;">
+                    <span class="material-symbols-rounded" style="font-size: 24px; color: var(--text);">password</span>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 16px; color: var(--text); margin-bottom: 2px;">Change PIN</div>
+                    <div style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Update security PIN</div>
+                </div>
+                <span class="material-symbols-rounded" style="color: var(--text-tertiary); font-size: 20px;">chevron_right</span>
+            </div>
+
+            <div class="settings-item" onclick="exportDataFile()">
+                <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.35); display: flex; align-items: center; justify-content: center;">
+                    <span class="material-symbols-rounded" style="font-size: 24px; color: var(--text);">download</span>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 16px; color: var(--text); margin-bottom: 2px;">Export Data</div>
+                    <div style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Download financial report</div>
+                </div>
+                <span class="material-symbols-rounded" style="color: var(--text-tertiary); font-size: 20px;">chevron_right</span>
+            </div>
+
+            <div class="settings-item" onclick="clearAllData()">
+                <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 59, 48, 0.2); display: flex; align-items: center; justify-content: center;">
+                    <span class="material-symbols-rounded" style="font-size: 24px; color: var(--error);">delete</span>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 16px; color: var(--error); margin-bottom: 2px;">Clear All Data</div>
+                    <div style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Delete all transactions</div>
+                </div>
+                <span class="material-symbols-rounded" style="color: var(--text-tertiary); font-size: 20px;">chevron_right</span>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; color: var(--text-tertiary); font-size: 13px; font-weight: 500;">
+                <p>Version 1.0.0</p>
+                <p style="margin-top: 6px;">Ultra Glass Design</p>
+            </div>
+        </div>
+
+        <!-- Bottom Nav Glass -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="navigateTo('home')">
+                <span class="material-symbols-rounded" style="font-size: 24px;">home</span>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('transactions')">
+                <span class="material-symbols-rounded" style="font-size: 24px;">receipt_long</span>
+                <span>Transactions</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('reports')">
+                <span class="material-symbols-rounded" style="font-size: 24px;">bar_chart</span>
+                <span>Reports</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('account')">
+                <span class="material-symbols-rounded" style="font-size: 24px;">settings</span>
+                <span>Settings</span>
+            </div>
+        </div>
+
+        <!-- FAB -->
+        <div class="fab" id="fabButton" onclick="openTransactionModal()">
+            <span class="material-symbols-rounded" style="font-size: 32px;">add</span>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="transactionModal" style="display: none;">
+        <div class="modal-overlay" onclick="closeTransactionModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 24px; font-weight: 700; color: var(--text);">Add Transaction</h2>
+                    <div class="icon-btn" onclick="closeTransactionModal()">
+                        <span class="material-symbols-rounded" style="font-size: 22px;">close</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                    <button id="incomeTypeBtn" class="tag-btn active" onclick="selectTransType('income')">
+                        <span class="material-symbols-rounded" style="font-size: 18px; vertical-align: middle; margin-right: 4px;">add</span>
+                        Income
+                    </button>
+                    <button id="expenseTypeBtn" class="tag-btn" onclick="selectTransType('expense')">
+                        <span class="material-symbols-rounded" style="font-size: 18px; vertical-align: middle; margin-right: 4px;">remove</span>
+                        Expense
+                    </button>
+                </div>
+
+                <label class="field-label">Amount</label>
+                <input type="number" id="transAmount" class="form-field" placeholder="0.00" step="0.01" style="margin-bottom: 18px;">
+
+                <label class="field-label">Category</label>
+                <select id="transCategory" class="form-field" style="margin-bottom: 18px;"></select>
+
+                <label class="field-label">Description</label>
+                <input type="text" id="transDescription" class="form-field" placeholder="Enter description" style="margin-bottom: 18px;">
+
+                <label class="field-label">Date</label>
+                <input type="date" id="transDate" class="form-field" style="margin-bottom: 24px;">
+
+                <button class="btn-primary" onclick="saveTransaction()">
+                    <span class="material-symbols-rounded" style="font-size: 20px; vertical-align: middle; margin-right: 8px;">check</span>
+                    Save Transaction
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Change Modal -->
+    <div class="pin-change-page" id="pinChangePage">
+        <div class="pin-change-header">
+            <div class="pin-change-back" onclick="closeChangePinModal()">
+                <span class="material-symbols-rounded" style="font-size: 22px;">arrow_back</span>
+            </div>
+            <h2 style="font-size: 20px; font-weight: 700; color: var(--text); flex: 1; text-align: center; margin-right: 44px;" id="pinChangeTitle">Verify Current PIN</h2>
+        </div>
+
+        <div class="pin-change-content">
+            <div style="width: 100%; max-width: 360px; text-align: center;">
+                <div class="pin-stage-progress">
+                    <div class="stage-line active" id="stageLine1"></div>
+                    <div class="stage-line" id="stageLine2"></div>
+                </div>
+
+                <div class="lock-icon-wrap" id="pinChangeIcon">
+                    <span class="material-symbols-rounded" style="font-size: 48px; color: var(--accent);" id="pinChangeIconSymbol">lock_open</span>
+                </div>
+
+                <h1 style="font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 12px;" id="pinChangeMainTitle">Verify Identity</h1>
+                <p id="pinChangeSubtitle" style="color: var(--text-secondary); font-size: 16px; font-weight: 500; line-height: 1.6; margin-bottom: 48px;">Enter your current 4-digit security PIN to continue</p>
+
+                <div class="pin-dots" style="margin-bottom: 56px;">
+                    <div class="pin-dot" id="changeDot1"></div>
+                    <div class="pin-dot" id="changeDot2"></div>
+                    <div class="pin-dot" id="changeDot3"></div>
+                    <div class="pin-dot" id="changeDot4"></div>
+                </div>
+
+                <div class="numpad">
+                    <button class="numpad-key" onclick="changePinAdd('1')">1</button>
+                    <button class="numpad-key" onclick="changePinAdd('2')">2</button>
+                    <button class="numpad-key" onclick="changePinAdd('3')">3</button>
+                    <button class="numpad-key" onclick="changePinAdd('4')">4</button>
+                    <button class="numpad-key" onclick="changePinAdd('5')">5</button>
+                    <button class="numpad-key" onclick="changePinAdd('6')">6</button>
+                    <button class="numpad-key" onclick="changePinAdd('7')">7</button>
+                    <button class="numpad-key" onclick="changePinAdd('8')">8</button>
+                    <button class="numpad-key" onclick="changePinAdd('9')">9</button>
+                    <button class="numpad-key" onclick="changePinDel()">
+                        <span class="material-symbols-rounded" style="font-size: 26px;">backspace</span>
+                    </button>
+                    <button class="numpad-key" onclick="changePinAdd('0')">0</button>
+                    <button class="numpad-key primary" onclick="changePinSubmit()">
+                        <span class="material-symbols-rounded" style="font-size: 26px;">check</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+
+    <script>
+        // [SAME JAVASCRIPT AS PREVIOUS VERSION - Copy the entire <script> section from the previous complete code]
+        // PWA Setup + All Functions remain exactly the same
+        // PWA Setup (continued in next message due to length)
+        const manifestData = {
+            "name": "ExpenseWise - Personal Finance Tracker",
+            "short_name": "ExpenseWise",
+            "description": "Track your expenses with Apple-style design",
+            "start_url": "./",
+            "display": "standalone",
+            "background_color": "#f5f7fa",
+            "theme_color": "#007aff",
+            "orientation": "portrait-primary",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23007aff' width='192' height='192' rx='48'/%3E%3Ctext x='96' y='140' font-size='100' text-anchor='middle' fill='white'%3E💰%3C/text%3E%3C/svg%3E",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml",
+                    "purpose": "any"
+                },
+                {
+                    "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%23007aff' width='512' height='512' rx='128'/%3E%3Ctext x='256' y='380' font-size='320' text-anchor='middle' fill='white'%3E💰%3C/text%3E%3C/svg%3E",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                }
+            ]
+        };
+
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = manifestURL;
+        document.head.appendChild(manifestLink);
+
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'expensewise-v1';
+                self.addEventListener('install', (event) => {
+                    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(['./', './index.html'])));
+                    self.skipWaiting();
+                });
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(caches.match(event.request).then((response) => response || fetch(event.request)));
+                });
+                self.addEventListener('activate', (event) => {
+                    event.waitUntil(caches.keys().then((cacheNames) => Promise.all(cacheNames.map((cacheName) => cacheName !== CACHE_NAME ? caches.delete(cacheName) : null))));
+                    return self.clients.claim();
+                });
+            `;
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            const swURL = URL.createObjectURL(swBlob);
+            navigator.serviceWorker.register(swURL);
+        }
+
+        // App Variables
+        let pin='',isSet=false,storedPin='',currentPage='home',transType='income',transactions=[],darkMode=false;
+        let searchQuery='',filterType='all';
+        let swipeStartX=0,swipeCurrentX=0,swipeElement=null,isSwiping=false;
+        let changePinTemp='',changePinStage=1;
+
+        const categories = {
+            income: [
+                { value: 'Salary', label: '💰 Salary', icon: '💰' },
+                { value: 'Stocks', label: '📈 Stocks', icon: '📈' },
+                { value: 'Interest', label: '🏦 Interest', icon: '🏦' },
+                { value: 'Other Income', label: '💵 Other', icon: '💵' }
+            ],
+            expense: [
+                { value: 'Food', label: '🍔 Food & Dining', icon: '🍔' },
+                { value: 'Transport', label: '🚗 Transportation', icon: '🚗' },
+                { value: 'Shopping', label: '🛍️ Shopping', icon: '🛍️' },
+                { value: 'Entertainment', label: '🎬 Entertainment', icon: '🎬' },
+                { value: 'Bills', label: '💡 Bills & Utilities', icon: '💡' },
+                { value: 'Health', label: '⚕️ Healthcare', icon: '⚕️' },
+                { value: 'Education', label: '📚 Education', icon: '📚' },
+                { value: 'Other Expense', label: '📦 Other', icon: '📦' }
+            ]
+        };
+
+        // PIN Change Functions
+        function openChangePinModal() {
+            const page = document.getElementById('pinChangePage');
+            if (darkMode) {
+                page.classList.add('dark');
+            } else {
+                page.classList.remove('dark');
+            }
+            page.classList.add('show');
+            changePinTemp = '';
+            changePinStage = 1;
+            updateChangePinDots();
+            updateChangePinUI();
+        }
+
+        function closeChangePinModal() {
+            document.getElementById('pinChangePage').classList.remove('show');
+            changePinTemp = '';
+            changePinStage = 1;
+        }
+
+        function changePinAdd(d) {
+            if (changePinTemp.length < 4) {
+                changePinTemp += d;
+                updateChangePinDots();
+                if (changePinTemp.length === 4) setTimeout(changePinSubmit, 250);
+            }
+        }
+
+        function changePinDel() {
+            if (changePinTemp.length) {
+                changePinTemp = changePinTemp.slice(0, -1);
+                updateChangePinDots();
+            }
+        }
+
+        function updateChangePinDots() {
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById('changeDot' + i).classList.toggle('filled', i <= changePinTemp.length);
+            }
+        }
+
+        function changePinSubmit() {
+            if (changePinTemp.length !== 4) return;
+
+            if (changePinStage === 1) {
+                if (changePinTemp === storedPin) {
+                    changePinStage = 2;
+                    changePinTemp = '';
+                    updateChangePinDots();
+                    updateChangePinUI();
+                } else {
+                    document.querySelectorAll('#pinChangePage .pin-dot').forEach(d => {
+                        d.style.animation = 'shake 0.4s ease';
+                        setTimeout(() => d.style.animation = '', 400);
+                    });
+                    changePinTemp = '';
+                    updateChangePinDots();
+                    showAlert('error', 'Incorrect PIN', 'The current PIN you entered is incorrect. Please try again.');
+                }
+            } else if (changePinStage === 2) {
+                localStorage.setItem('expenseWisePin', changePinTemp);
+                storedPin = changePinTemp;
+                closeChangePinModal();
+                showAlert('success', 'PIN Updated', 'Your security PIN has been changed successfully!');
+            }
+        }
+
+        function updateChangePinUI() {
+            if (changePinStage === 1) {
+                document.getElementById('pinChangeTitle').textContent = 'Verify Current PIN';
+                document.getElementById('pinChangeMainTitle').textContent = 'Verify Identity';
+                document.getElementById('pinChangeSubtitle').textContent = 'Enter your current 4-digit security PIN to continue';
+                document.getElementById('pinChangeIconSymbol').textContent = 'lock_open';
+                document.getElementById('stageLine1').classList.add('active');
+                document.getElementById('stageLine2').classList.remove('active');
+            } else {
+                document.getElementById('pinChangeTitle').textContent = 'Set New PIN';
+                document.getElementById('pinChangeMainTitle').textContent = 'Create New PIN';
+                document.getElementById('pinChangeSubtitle').textContent = 'Enter your new 4-digit security PIN';
+                document.getElementById('pinChangeIconSymbol').textContent = 'lock_reset';
+                document.getElementById('stageLine1').classList.remove('active');
+                document.getElementById('stageLine2').classList.add('active');
+            }
+        }
+
+        // Alert Functions
+        function showAlert(type, title, message, onConfirm, showCancel = false) {
+            const alertContainer = document.getElementById('alertContainer');
+            const iconMap = {
+                error: { icon: 'error', class: 'error' },
+                success: { icon: 'check_circle', class: 'success' },
+                warning: { icon: 'warning', class: 'warning' },
+                info: { icon: 'info', class: 'error' }
+            };
+            const { icon, class: iconClass } = iconMap[type] || iconMap.error;
+            const alertHTML = `
+                <div class="alert-overlay">
+                    <div class="alert-box">
+                        <div class="alert-icon ${iconClass}">
+                            <span class="material-symbols-rounded" style="font-size: 32px;">${icon}</span>
+                        </div>
+                        <h3 class="alert-title">${title}</h3>
+                        <p class="alert-message">${message}</p>
+                        <div class="alert-buttons">
+                            ${showCancel ? '<button class="alert-btn secondary" onclick="closeAlert()">Cancel</button>' : ''}
+                            <button class="alert-btn primary" onclick="handleAlertConfirm()">OK</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            alertContainer.innerHTML = alertHTML;
+            window.alertConfirmCallback = onConfirm;
+        }
+
+        function closeAlert() {
+            document.getElementById('alertContainer').innerHTML = '';
+            window.alertConfirmCallback = null;
+        }
+
+        function handleAlertConfirm() {
+            if (window.alertConfirmCallback) {
+                window.alertConfirmCallback();
+            }
+            closeAlert();
+        }
+
+        // Filter Functions
+        function toggleFilterDropdown() {
+            document.getElementById('filterDropdown').classList.toggle('show');
+        }
+
+        function selectFilter(type) {
+            filterType = type;
+            const options = document.querySelectorAll('.filter-option');
+            options.forEach(opt => opt.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const filterText = document.getElementById('filterText');
+            const filterBtn = document.getElementById('filterBtn');
+            
+            if (type === 'all') {
+                filterText.textContent = 'All';
+                filterBtn.classList.remove('active');
+            } else if (type === 'income') {
+                filterText.textContent = 'Income';
+                filterBtn.classList.add('active');
+            } else {
+                filterText.textContent = 'Expenses';
+                filterBtn.classList.add('active');
+            }
+            
+            toggleFilterDropdown();
+            loadAllTransactions();
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('filterDropdown');
+            const filterBtn = document.getElementById('filterBtn');
+            if (dropdown && filterBtn && !filterBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Search
+        let searchTimeout;
+        function searchTransactions() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = document.getElementById('searchInput').value.toLowerCase();
+                loadAllTransactions();
+            }, 300);
+        }
+
+        function getFilteredTransactions() {
+            let filtered = transactions;
+            if (filterType !== 'all') {
+                filtered = filtered.filter(t => t.type === filterType);
+            }
+            if (searchQuery) {
+                filtered = filtered.filter(t => 
+                    t.description.toLowerCase().includes(searchQuery) ||
+                    t.category.toLowerCase().includes(searchQuery) ||
+                    t.amount.toString().includes(searchQuery) ||
+                    new Date(t.date).toLocaleDateString('en-IN').toLowerCase().includes(searchQuery)
+                );
+            }
+            return filtered;
+        }
+
+        // Swipe to Delete
+        function initSwipe() {
+            const container = document.getElementById('allTrans');
+            container.addEventListener('touchstart', handleTouchStart, { passive: true });
+            container.addEventListener('touchmove', handleTouchMove, { passive: false });
+            container.addEventListener('touchend', handleTouchEnd);
+            container.addEventListener('mousedown', handleMouseDown);
+            container.addEventListener('mousemove', handleMouseMove);
+            container.addEventListener('mouseup', handleMouseUp);
+        }
+
+        function handleTouchStart(e) {
+            const target = e.target.closest('.transaction-item');
+            if (target) {
+                swipeElement = target;
+                swipeStartX = e.touches[0].clientX;
+                isSwiping = true;
+                swipeElement.classList.add('swiping');
+            }
+        }
+
+        function handleTouchMove(e) {
+            if (!isSwiping || !swipeElement) return;
+            swipeCurrentX = e.touches[0].clientX;
+            const diff = swipeCurrentX - swipeStartX;
+            if (Math.abs(diff) > 10) {
+                e.preventDefault();
+                requestAnimationFrame(() => {
+                    swipeElement.style.transform = `translateX(${diff}px)`;
+                    if (Math.abs(diff) > 80) {
+                        swipeElement.parentElement.classList.add('deleting');
+                    } else {
+                        swipeElement.parentElement.classList.remove('deleting');
+                    }
+                });
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (!isSwiping || !swipeElement) return;
+            const diff = swipeCurrentX - swipeStartX;
+            if (Math.abs(diff) > 100) {
+                const transId = parseInt(swipeElement.getAttribute('data-id'));
+                confirmDelete(transId);
+            } else {
+                swipeElement.style.transform = '';
+                swipeElement.parentElement.classList.remove('deleting');
+            }
+            swipeElement.classList.remove('swiping');
+            swipeElement = null;
+            isSwiping = false;
+            swipeStartX = 0;
+            swipeCurrentX = 0;
+        }
+
+        function handleMouseDown(e) {
+            const target = e.target.closest('.transaction-item');
+            if (target) {
+                swipeElement = target;
+                swipeStartX = e.clientX;
+                isSwiping = true;
+                swipeElement.classList.add('swiping');
+            }
+        }
+
+        function handleMouseMove(e) {
+            if (!isSwiping || !swipeElement) return;
+            swipeCurrentX = e.clientX;
+            const diff = swipeCurrentX - swipeStartX;
+            if (Math.abs(diff) > 10) {
+                requestAnimationFrame(() => {
+                    swipeElement.style.transform = `translateX(${diff}px)`;
+                    if (Math.abs(diff) > 80) {
+                        swipeElement.parentElement.classList.add('deleting');
+                    } else {
+                        swipeElement.parentElement.classList.remove('deleting');
+                    }
+                });
+            }
+        }
+
+        function handleMouseUp(e) {
+            if (!isSwiping || !swipeElement) return;
+            const diff = swipeCurrentX - swipeStartX;
+            if (Math.abs(diff) > 100) {
+                const transId = parseInt(swipeElement.getAttribute('data-id'));
+                confirmDelete(transId);
+            } else {
+                swipeElement.style.transform = '';
+                swipeElement.parentElement.classList.remove('deleting');
+            }
+            swipeElement.classList.remove('swiping');
+            swipeElement = null;
+            isSwiping = false;
+            swipeStartX = 0;
+            swipeCurrentX = 0;
+        }
+
+        function confirmDelete(id) {
+            showAlert('warning', 'Delete Transaction', 'Are you sure you want to delete this transaction? This action cannot be undone.', () => {
+                deleteTransaction(id);
+            }, true);
+        }
+
+        function updateFABVisibility() {
+            const fab = document.getElementById('fabButton');
+            if (currentPage === 'home') {
+                fab.classList.remove('hidden');
+            } else {
+                fab.classList.add('hidden');
+            }
+        }
+
+        // Core Functions
+        function init(){
+            loadTheme();
+            storedPin=localStorage.getItem('expenseWisePin')||'';
+            transactions=JSON.parse(localStorage.getItem('expenseWiseTransactions')||'[]');
+            document.getElementById('app').classList.add('locked');
+            if(!storedPin){
+                isSet=true;
+                document.getElementById('lockTitle').textContent='Create PIN';
+                document.getElementById('lockSubtitle').textContent='Set your 4-digit security PIN';
+            }
+            document.getElementById('transDate').value=new Date().toISOString().split('T')[0];
+            updateCategoryOptions();
+            updateFABVisibility();
+            initSwipe();
+        }
+
+        function updateCategoryOptions() {
+            const categorySelect = document.getElementById('transCategory');
+            const currentCategories = categories[transType];
+            categorySelect.innerHTML = currentCategories.map(cat => 
+                `<option value="${cat.value}">${cat.label}</option>`
+            ).join('');
+        }
+
+        function pinAdd(d){
+            if(pin.length<4){
+                pin+=d;
+                updatePinDots();
+                if(pin.length===4)setTimeout(pinSubmit,200);
+            }
+        }
+
+        function pinDel(){
+            if(pin.length){
+                pin=pin.slice(0,-1);
+                updatePinDots();
+            }
+        }
+
+        function updatePinDots(){
+            for(let i=1;i<=4;i++){
+                document.getElementById('dot'+i).classList.toggle('filled',i<=pin.length);
+            }
+        }
+
+        function pinSubmit(){
+            if(pin.length!==4)return;
+            if(isSet){
+                localStorage.setItem('expenseWisePin',pin);
+                storedPin=pin;
+                isSet=false;
+                unlockApp();
+                showAlert('success', 'PIN Created', 'Your security PIN has been set successfully!');
+            }else{
+                if(pin===storedPin)unlockApp();
+                else{
+                    document.querySelectorAll('.pin-dot').forEach(d=>{
+                        d.style.animation='shake 0.3s ease';
+                        setTimeout(()=>d.style.animation='',300);
+                    });
+                    pin='';
+                    updatePinDots();
+                    showAlert('error', 'Incorrect PIN', 'The PIN you entered is incorrect. Please try again.');
+                }
+            }
+        }
+
+        function unlockApp(){
+            document.getElementById('app').classList.remove('locked');
+            document.getElementById('lockPage').classList.remove('active');
+            document.getElementById('homePage').classList.add('active');
+            pin='';
+            updatePinDots();
+            updateDashboard();
+            loadRecentTransactions();
+            generateReport();
+            updateFABVisibility();
+        }
+
+        function lockApp(){
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+            document.getElementById('lockPage').classList.add('active');
+            document.getElementById('lockTitle').textContent='Enter PIN';
+            document.getElementById('lockSubtitle').textContent='Enter your 4-digit security PIN';
+            pin='';
+            updatePinDots();
+            document.getElementById('app').classList.add('locked');
+        }
+
+        function loadTheme(){
+            darkMode=localStorage.getItem('expenseWiseTheme')==='dark';
+            document.getElementById('app').classList.toggle('dark',darkMode);
+            updateThemeUI();
+        }
+
+        function toggleTheme(){
+            darkMode=!darkMode;
+            document.getElementById('app').classList.toggle('dark',darkMode);
+            localStorage.setItem('expenseWiseTheme',darkMode?'dark':'light');
+            updateThemeUI();
+        }
+
+        function updateThemeUI(){
+            document.getElementById('themeIcon').textContent=darkMode?'light_mode':'dark_mode';
+            document.getElementById('themeText').textContent=darkMode?'Switch to light mode':'Switch to dark mode';
+        }
+
+        function navigateTo(page){
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+            document.getElementById(page+'Page').classList.add('active');
+            const navs=document.querySelectorAll('.nav-item');
+            const idx=['home','transactions','reports','account'].indexOf(page);
+            if(idx!==-1)navs[idx].classList.add('active');
+            currentPage=page;
+            updateFABVisibility();
+            if(page==='transactions'){
+                searchQuery='';
+                filterType='all';
+                document.getElementById('searchInput').value='';
+                document.getElementById('filterText').textContent='All';
+                document.getElementById('filterBtn').classList.remove('active');
+                loadAllTransactions();
+            }
+            else if(page==='reports')generateReport();
+        }
+
+        function refreshPage(){
+            updateDashboard();
+            loadRecentTransactions();
+            if(currentPage==='transactions')loadAllTransactions();
+            else if(currentPage==='reports')generateReport();
+        }
+
+        function openTransactionModal(){
+            document.getElementById('transactionModal').style.display='block';
+            transType='income';
+            document.getElementById('incomeTypeBtn').classList.add('active');
+            document.getElementById('expenseTypeBtn').classList.remove('active');
+            document.getElementById('transAmount').value='';
+            document.getElementById('transDescription').value='';
+            document.getElementById('transDate').value=new Date().toISOString().split('T')[0];
+            updateCategoryOptions();
+        }
+
+        function closeTransactionModal(e){
+            if(!e||e.target.classList.contains('modal-overlay')){
+                document.getElementById('transactionModal').style.display='none';
+            }
+        }
+
+        function selectTransType(type){
+            transType=type;
+            document.getElementById('incomeTypeBtn').classList.toggle('active',type==='income');
+            document.getElementById('expenseTypeBtn').classList.toggle('active',type==='expense');
+            updateCategoryOptions();
+        }
+
+        function saveTransaction(){
+            const amount=parseFloat(document.getElementById('transAmount').value);
+            const category=document.getElementById('transCategory').value;
+            const description=document.getElementById('transDescription').value;
+            const date=document.getElementById('transDate').value;
+            
+            if(!amount||amount<=0){
+                showAlert('error', 'Invalid Amount', 'Please enter a valid amount greater than 0.');
+                return;
+            }
+            if(!description.trim()){
+                showAlert('error', 'Missing Description', 'Please enter a description for this transaction.');
+                return;
+            }
+            
+            transactions.unshift({id:Date.now(),type:transType,amount,category,description,date});
+            localStorage.setItem('expenseWiseTransactions',JSON.stringify(transactions));
+            closeTransactionModal();
+            updateDashboard();
+            loadRecentTransactions();
+            if(currentPage==='transactions')loadAllTransactions();
+            else if(currentPage==='reports')generateReport();
+            
+            showAlert('success', 'Transaction Added', `Your ${transType} of ₹${amount.toFixed(2)} has been recorded successfully!`);
+        }
+
+        function deleteTransaction(id){
+            transactions=transactions.filter(t=>t.id!==id);
+            localStorage.setItem('expenseWiseTransactions',JSON.stringify(transactions));
+            updateDashboard();
+            loadRecentTransactions();
+            loadAllTransactions();
+            generateReport();
+            showAlert('success', 'Deleted', 'Transaction has been deleted successfully.');
+        }
+
+        function updateDashboard(){
+            let income=0,expense=0;
+            transactions.forEach(t=>{
+                if(t.type==='income')income+=t.amount;
+                else expense+=t.amount;
+            });
+            document.getElementById('totalBalance').textContent=`₹${(income-expense).toFixed(2)}`;
+            document.getElementById('totalIncome').textContent=`₹${income.toFixed(2)}`;
+            document.getElementById('totalExpense').textContent=`₹${expense.toFixed(2)}`;
+        }
+
+        function loadRecentTransactions(){
+            const container=document.getElementById('recentTrans');
+            const recent=transactions.slice(0,5);
+            if(!recent.length){
+                container.innerHTML=`
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <span class="material-symbols-rounded" style="font-size: 32px; color: var(--text-tertiary);">receipt_long</span>
+                        </div>
+                        <p style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">No transactions yet</p>
+                        <p style="font-size: 13px;">Tap + to add your first transaction</p>
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML=recent.map(t=>createTransactionItem(t,false)).join('');
+        }
+
+        function loadAllTransactions(){
+            const container=document.getElementById('allTrans');
+            const filtered = getFilteredTransactions();
+            
+            if(!filtered.length){
+                const message = searchQuery ? `No results for "${searchQuery}"` : filterType !== 'all' ? `No ${filterType} transactions` : 'No transactions';
+                container.innerHTML=`
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <span class="material-symbols-rounded" style="font-size: 32px; color: var(--text-tertiary);">search_off</span>
+                        </div>
+                        <p style="font-size: 15px; font-weight: 600; color: var(--text);">${message}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filtered.map(t=>createSwipeableTransaction(t)).join('');
+        }
+
+        function getCategoryIcon(category) {
+            const allCategories = [...categories.income, ...categories.expense];
+            const cat = allCategories.find(c => c.value === category);
+            return cat ? cat.icon : '📦';
+        }
+
+        function createTransactionItem(t, swipeable = false){
+            const isIncome=t.type==='income';
+            const date=new Date(t.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+            const categoryIcon = getCategoryIcon(t.category);
+            
+            return`
+                <div class="transaction-wrapper">
+                    <div class="transaction-item" ${swipeable ? `data-id="${t.id}"` : ''}>
+                        <div class="trans-icon">${categoryIcon}</div>
+                        <div class="trans-details">
+                            <div class="trans-description">${t.description}</div>
+                            <div class="trans-meta">${t.category} • ${date}</div>
+                        </div>
+                        <div class="trans-amount ${isIncome?'income':'expense'}">
+                            ${isIncome?'+':'-'}₹${t.amount.toFixed(2)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createSwipeableTransaction(t){
+            const isIncome=t.type==='income';
+            const date=new Date(t.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+            const categoryIcon = getCategoryIcon(t.category);
+            
+            return`
+                <div class="transaction-wrapper">
+                    <div class="delete-bg">
+                        <span class="material-symbols-rounded" style="font-size: 24px; margin-right: 8px;">delete</span>
+                        Swipe to delete
+                    </div>
+                    <div class="transaction-item" data-id="${t.id}">
+                        <div class="trans-icon">${categoryIcon}</div>
+                        <div class="trans-details">
+                            <div class="trans-description">${t.description}</div>
+                            <div class="trans-meta">${t.category} • ${date}</div>
+                        </div>
+                        <div class="trans-amount ${isIncome?'income':'expense'}">
+                            ${isIncome?'+':'-'}₹${t.amount.toFixed(2)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateReport(){
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+            
+            const filtered=transactions.filter(t=>{
+                const d=new Date(t.date);
+                return d.getMonth()===currentMonth && d.getFullYear()===currentYear;
+            });
+            
+            let income=0,expense=0;
+            const cats={};
+            
+            filtered.forEach(t=>{
+                if(t.type==='income'){
+                    income+=t.amount;
+                }else{
+                    expense+=t.amount;
+                    cats[t.category]=(cats[t.category]||0)+t.amount;
+                }
+            });
+            
+            document.getElementById('reportMonth').textContent=`${months[currentMonth]} ${currentYear}`;
+            document.getElementById('repIncome').textContent=`₹${income.toFixed(2)}`;
+            document.getElementById('repExpense').textContent=`₹${expense.toFixed(2)}`;
+            document.getElementById('repSavings').textContent=`₹${(income-expense).toFixed(2)}`;
+            
+            updateBarChart(income, expense);
+            
+            const container=document.getElementById('catBreakdown');
+            if(!Object.keys(cats).length){
+                container.innerHTML='<div style="text-align:center;padding:32px;color:var(--text-secondary);font-size:14px;">No expense data for this month</div>';
+            }else{
+                container.innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>{
+                    const pct=expense>0?(amt/expense*100).toFixed(1):0;
+                    const categoryIcon = getCategoryIcon(cat);
+                    return`
+                        <div style="margin-bottom:20px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                <span style="font-weight:700;font-size:14px;color:var(--text);">${categoryIcon} ${cat}</span>
+                                <span style="font-weight:800;font-size:14px;color:var(--text);">₹${amt.toFixed(2)} <span style="opacity:0.5;font-size:12px;">${pct}%</span></span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function updateBarChart(income, expense) {
+            const maxValue = Math.max(income, expense, 1);
+            const incomeHeight = (income / maxValue) * 100;
+            const expenseHeight = (expense / maxValue) * 100;
+            
+            requestAnimationFrame(() => {
+                document.getElementById('incomeBar').style.height = incomeHeight + '%';
+                document.getElementById('expenseBar').style.height = expenseHeight + '%';
+                document.getElementById('incomeBarValue').textContent = '₹' + income.toFixed(0);
+                document.getElementById('expenseBarValue').textContent = '₹' + expense.toFixed(0);
+            });
+        }
+
+        function exportDataFile(){
+            const today = new Date().getDate();
+            
+            if(today !== 5){
+                showAlert('warning', 'Export Locked', `Financial data export is only available on the 5th of each month. Please try again on the 5th.`);
+                return;
+            }
+            
+            if(transactions.length === 0){
+                showAlert('warning', 'No Data', 'There are no transactions to export.');
+                return;
+            }
+            
+            const now = new Date();
+            const reportData = generateDetailedReport();
+            
+            const blob = new Blob([reportData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ExpenseWise_Financial_Report_${now.toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showAlert('success', 'Export Successful', 'Your detailed financial report has been downloaded!');
+        }
+
+        function generateDetailedReport() {
+            const now = new Date();
+            let report = '';
+            
+            report += '═══════════════════════════════════════════════════\n';
+            report += '           EXPENSEWISE FINANCIAL REPORT            \n';
+            report += '═══════════════════════════════════════════════════\n\n';
+            report += `Generated: ${now.toLocaleString('en-IN')}\n\n`;
+            
+            let totalIncome = 0, totalExpense = 0;
+            transactions.forEach(t => {
+                if(t.type === 'income') totalIncome += t.amount;
+                else totalExpense += t.amount;
+            });
+            
+            report += '────────────────── OVERALL SUMMARY ───────────────────\n\n';
+            report += `Total Income:        ₹${totalIncome.toFixed(2)}\n`;
+            report += `Total Expenses:      ₹${totalExpense.toFixed(2)}\n`;
+            report += `Net Balance:         ₹${(totalIncome - totalExpense).toFixed(2)}\n`;
+            report += `Total Transactions:  ${transactions.length}\n\n`;
+            
+            const monthlyData = {};
+            transactions.forEach(t => {
+                const date = new Date(t.date);
+                const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                if(!monthlyData[key]) monthlyData[key] = { income: 0, expense: 0, count: 0 };
+                if(t.type === 'income') monthlyData[key].income += t.amount;
+                else monthlyData[key].expense += t.amount;
+                monthlyData[key].count++;
+            });
+            
+            report += '────────────────── MONTHLY BREAKDOWN ────────────────\n\n';
+            Object.keys(monthlyData).sort().reverse().forEach(month => {
+                const data = monthlyData[month];
+                const [year, mon] = month.split('-');
+                const monthName = new Date(year, mon - 1).toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+                report += `${monthName}:\n`;
+                report += `  Income:      ₹${data.income.toFixed(2)}\n`;
+                report += `  Expenses:    ₹${data.expense.toFixed(2)}\n`;
+                report += `  Savings:     ₹${(data.income - data.expense).toFixed(2)}\n`;
+                report += `  Transactions: ${data.count}\n\n`;
+            });
+            
+            const categoryData = {};
+            transactions.filter(t => t.type === 'expense').forEach(t => {
+                if(!categoryData[t.category]) categoryData[t.category] = 0;
+                categoryData[t.category] += t.amount;
+            });
+            
+            if(Object.keys(categoryData).length > 0){
+                report += '────────────────── EXPENSE CATEGORIES ───────────────\n\n';
+                Object.entries(categoryData).sort((a,b) => b[1] - a[1]).forEach(([cat, amt]) => {
+                    const pct = (amt / totalExpense * 100).toFixed(1);
+                    report += `${getCategoryIcon(cat)} ${cat.padEnd(20)} ₹${amt.toFixed(2).padStart(12)} (${pct}%)\n`;
+                });
+                report += '\n';
+            }
+            
+            report += '────────────────── ALL TRANSACTIONS ──────────────────\n\n';
+            transactions.slice().reverse().forEach((t, i) => {
+                const date = new Date(t.date).toLocaleDateString('en-IN');
+                const type = t.type === 'income' ? 'INCOME' : 'EXPENSE';
+                const sign = t.type === 'income' ? '+' : '-';
+                report += `${i + 1}. ${date} | ${type.padEnd(7)} | ${t.category.padEnd(15)} | ${sign}₹${t.amount.toFixed(2).padStart(10)}\n`;
+                report += `   ${t.description}\n\n`;
+            });
+            
+            report += '═══════════════════════════════════════════════════\n';
+            report += '            END OF FINANCIAL REPORT                \n';
+            report += '═══════════════════════════════════════════════════\n';
+            
+            return report;
+        }
+
+        function clearAllData(){
+            showAlert('warning', 'Clear All Data', 'This will permanently delete ALL your transactions and data. This action CANNOT be undone!', () => {
+                showAlert('error', 'Final Confirmation', 'Are you absolutely sure? All your financial data will be lost forever!', () => {
+                    localStorage.removeItem('expenseWiseTransactions');
+                    transactions = [];
+                    updateDashboard();
+                    loadRecentTransactions();
+                    loadAllTransactions();
+                    generateReport();
+                    showAlert('success', 'Data Cleared', 'All your transaction data has been permanently deleted.');
+                }, true);
+            }, true);
+        }
+
+        window.onload=init;
+        /**
+ * Advanced Mobile Viewport Manager
+ * Handles screen size detection, safe areas, notches, and dynamic element adjustment
+ */
+
+class MobileViewportManager {
+    constructor() {
+        this.viewport = {
+            width: 0,
+            height: 0,
+            safeAreaInsets: { top: 0, right: 0, bottom: 0, left: 0 },
+            orientation: 'portrait',
+            deviceType: 'mobile',
+            hasNotch: false,
+            pixelRatio: window.devicePixelRatio || 1
+        };
+        
+        this.breakpoints = {
+            xs: 320,    // Small phones
+            sm: 375,    // iPhone SE, 8
+            md: 390,    // iPhone 12/13/14
+            lg: 428,    // iPhone 14 Pro Max
+            xl: 480     // Large phones/small tablets
+        };
+        
+        this.init();
+    }
+
+    init() {
+        this.detectViewport();
+        this.detectSafeAreas();
+        this.detectNotch();
+        this.applyResponsiveStyles();
+        this.setupEventListeners();
+        this.adjustAllElements();
+    }
+
+    /**
+     * Detect viewport dimensions and characteristics
+     */
+    detectViewport() {
+        // Get actual viewport dimensions
+        this.viewport.width = window.innerWidth;
+        this.viewport.height = window.innerHeight;
+        
+        // Detect orientation
+        this.viewport.orientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+        
+        // Detect device type
+        const userAgent = navigator.userAgent.toLowerCase();
+        this.viewport.deviceType = /mobile|android|iphone|ipad|tablet/.test(userAgent) ? 'mobile' : 'desktop';
+        
+        // Get device pixel ratio
+        this.viewport.pixelRatio = window.devicePixelRatio || 1;
+        
+        // Determine size category
+        this.viewport.sizeCategory = this.getSizeCategory();
+        
+        console.log('📱 Viewport Detected:', this.viewport);
+    }
+
+    /**
+     * Detect safe area insets (for notched devices)
+     */
+    detectSafeAreas() {
+        // Use CSS environment variables for safe areas
+        const style = getComputedStyle(document.documentElement);
+        
+        this.viewport.safeAreaInsets = {
+            top: parseInt(style.getPropertyValue('--sat') || 
+                         style.getPropertyValue('env(safe-area-inset-top)') || '0'),
+            right: parseInt(style.getPropertyValue('--sar') || 
+                           style.getPropertyValue('env(safe-area-inset-right)') || '0'),
+            bottom: parseInt(style.getPropertyValue('--sab') || 
+                            style.getPropertyValue('env(safe-area-inset-bottom)') || '0'),
+            left: parseInt(style.getPropertyValue('--sal') || 
+                          style.getPropertyValue('env(safe-area-inset-left)') || '0')
+        };
+        
+        // Fallback detection for common devices
+        if (this.viewport.safeAreaInsets.top === 0) {
+            this.detectSafeAreasFallback();
+        }
+        
+        console.log('🛡️ Safe Areas:', this.viewport.safeAreaInsets);
+    }
+
+    /**
+     * Fallback detection for devices without CSS environment variables
+     */
+    detectSafeAreasFallback() {
+        const { height, width } = this.viewport;
+        const userAgent = navigator.userAgent;
+        
+        // iPhone X and newer detection
+        if (/iPhone/.test(userAgent)) {
+            // iPhone 14 Pro/Pro Max with Dynamic Island
+            if ((height === 932 && width === 430) || (height === 852 && width === 393)) {
+                this.viewport.safeAreaInsets.top = 59;
+                this.viewport.safeAreaInsets.bottom = 34;
+            }
+            // iPhone X/XS/11 Pro
+            else if (height === 812 && width === 375) {
+                this.viewport.safeAreaInsets.top = 44;
+                this.viewport.safeAreaInsets.bottom = 34;
+            }
+            // iPhone XR/11/12/13
+            else if (height === 896 && (width === 414 || width === 390)) {
+                this.viewport.safeAreaInsets.top = 48;
+                this.viewport.safeAreaInsets.bottom = 34;
+            }
+            // iPhone 12/13 Mini
+            else if (height === 812 && width === 375) {
+                this.viewport.safeAreaInsets.top = 50;
+                this.viewport.safeAreaInsets.bottom = 34;
+            }
+        }
+        
+        // Android notched devices
+        if (/Android/.test(userAgent) && height > 800) {
+            this.viewport.safeAreaInsets.top = Math.max(24, this.viewport.safeAreaInsets.top);
+        }
+    }
+
+    /**
+     * Detect if device has a notch/dynamic island
+     */
+    detectNotch() {
+        this.viewport.hasNotch = this.viewport.safeAreaInsets.top > 20 || 
+                                  this.viewport.safeAreaInsets.bottom > 20;
+        
+        // Additional detection based on screen ratio
+        const aspectRatio = this.viewport.height / this.viewport.width;
+        if (aspectRatio > 2) {
+            this.viewport.hasNotch = true;
+        }
+    }
+
+    /**
+     * Get size category based on width
+     */
+    getSizeCategory() {
+        const w = this.viewport.width;
+        if (w < this.breakpoints.xs) return 'xs';
+        if (w < this.breakpoints.sm) return 'sm';
+        if (w < this.breakpoints.md) return 'md';
+        if (w < this.breakpoints.lg) return 'lg';
+        return 'xl';
+    }
+
+    /**
+     * Apply responsive CSS custom properties
+     */
+    applyResponsiveStyles() {
+        const root = document.documentElement;
+        const { width, height, safeAreaInsets, sizeCategory, hasNotch } = this.viewport;
+        
+        // Set viewport dimensions
+        root.style.setProperty('--vw', `${width}px`);
+        root.style.setProperty('--vh', `${height}px`);
+        root.style.setProperty('--vh-real', `${window.innerHeight}px`);
+        
+        // Set safe area insets
+        root.style.setProperty('--sat', `${safeAreaInsets.top}px`);
+        root.style.setProperty('--sar', `${safeAreaInsets.right}px`);
+        root.style.setProperty('--sab', `${safeAreaInsets.bottom}px`);
+        root.style.setProperty('--sal', `${safeAreaInsets.left}px`);
+        
+        // Dynamic spacing based on screen size
+        const baseSpacing = this.calculateBaseSpacing();
+        root.style.setProperty('--spacing-xs', `${baseSpacing * 0.5}px`);
+        root.style.setProperty('--spacing-sm', `${baseSpacing}px`);
+        root.style.setProperty('--spacing-md', `${baseSpacing * 1.5}px`);
+        root.style.setProperty('--spacing-lg', `${baseSpacing * 2}px`);
+        root.style.setProperty('--spacing-xl', `${baseSpacing * 3}px`);
+        
+        // Dynamic font sizes
+        const baseFontSize = this.calculateBaseFontSize();
+        root.style.setProperty('--font-xs', `${baseFontSize * 0.75}px`);
+        root.style.setProperty('--font-sm', `${baseFontSize * 0.875}px`);
+        root.style.setProperty('--font-base', `${baseFontSize}px`);
+        root.style.setProperty('--font-lg', `${baseFontSize * 1.125}px`);
+        root.style.setProperty('--font-xl', `${baseFontSize * 1.25}px`);
+        root.style.setProperty('--font-2xl', `${baseFontSize * 1.5}px`);
+        root.style.setProperty('--font-3xl', `${baseFontSize * 2}px`);
+        
+        // Dynamic container padding
+        const containerPadding = this.calculateContainerPadding();
+        root.style.setProperty('--container-padding', `${containerPadding}px`);
+        
+        // Set data attributes for CSS targeting
+        root.setAttribute('data-size', sizeCategory);
+        root.setAttribute('data-notch', hasNotch);
+        root.setAttribute('data-orientation', this.viewport.orientation);
+    }
+
+    /**
+     * Calculate base spacing based on screen width
+     */
+    calculateBaseSpacing() {
+        const w = this.viewport.width;
+        if (w < this.breakpoints.xs) return 12;
+        if (w < this.breakpoints.sm) return 14;
+        if (w < this.breakpoints.md) return 16;
+        if (w < this.breakpoints.lg) return 18;
+        return 20;
+    }
+
+    /**
+     * Calculate base font size based on screen width
+     */
+    calculateBaseFontSize() {
+        const w = this.viewport.width;
+        if (w < this.breakpoints.xs) return 14;
+        if (w < this.breakpoints.sm) return 15;
+        if (w < this.breakpoints.md) return 16;
+        return 16;
+    }
+
+    /**
+     * Calculate container padding based on screen width
+     */
+    calculateContainerPadding() {
+        const w = this.viewport.width;
+        if (w < this.breakpoints.xs) return 16;
+        if (w < this.breakpoints.sm) return 18;
+        if (w < this.breakpoints.md) return 20;
+        return 20;
+    }
+
+    /**
+     * Adjust all elements dynamically
+     */
+    adjustAllElements() {
+        this.adjustPages();
+        this.adjustBalanceCard();
+        this.adjustTransactionItems();
+        this.adjustNavigation();
+        this.adjustFAB();
+        this.adjustModal();
+        this.adjustLockScreen();
+        this.adjustFormElements();
+        this.preventOverflow();
+    }
+
+    /**
+     * Adjust page containers
+     */
+    adjustPages() {
+        const pages = document.querySelectorAll('.page');
+        const { safeAreaInsets, height } = this.viewport;
+        const containerPadding = this.calculateContainerPadding();
+        
+        pages.forEach(page => {
+            // Set padding with safe areas
+            page.style.paddingTop = `${safeAreaInsets.top + 16}px`;
+            page.style.paddingLeft = `${Math.max(containerPadding, safeAreaInsets.left)}px`;
+            page.style.paddingRight = `${Math.max(containerPadding, safeAreaInsets.right)}px`;
+            
+            // Calculate bottom padding (nav + safe area + extra space)
+            const navHeight = 76; // Approximate nav height
+            page.style.paddingBottom = `${navHeight + safeAreaInsets.bottom + 24}px`;
+            
+            // Ensure max height to prevent overflow
+            page.style.maxHeight = `${height}px`;
+            page.style.overflowY = 'auto';
+            page.style.overflowX = 'hidden';
+        });
+    }
+
+    /**
+     * Adjust balance card for different screen sizes
+     */
+    adjustBalanceCard() {
+        const card = document.querySelector('.balance-card');
+        if (!card) return;
+        
+        const { width, sizeCategory } = this.viewport;
+        
+        // Adjust padding based on screen size
+        if (sizeCategory === 'xs') {
+            card.style.padding = '24px 20px';
+        } else if (sizeCategory === 'sm') {
+            card.style.padding = '26px 22px';
+        } else {
+            card.style.padding = '28px 24px';
+        }
+        
+        // Adjust balance font size
+        const balanceText = card.querySelector('[id*="Balance"]');
+        if (balanceText) {
+            if (width < this.breakpoints.sm) {
+                balanceText.style.fontSize = '38px';
+            } else if (width < this.breakpoints.md) {
+                balanceText.style.fontSize = '42px';
+            } else {
+                balanceText.style.fontSize = '44px';
+            }
+        }
+        
+        // Ensure card doesn't overflow
+        card.style.maxWidth = '100%';
+        card.style.overflow = 'hidden';
+    }
+
+    /**
+     * Adjust transaction items
+     */
+    adjustTransactionItems() {
+        const items = document.querySelectorAll('.transaction-item');
+        const { sizeCategory } = this.viewport;
+        
+        items.forEach(item => {
+            // Adjust padding
+            if (sizeCategory === 'xs') {
+                item.style.padding = '14px';
+            } else {
+                item.style.padding = '16px';
+            }
+            
+            // Ensure proper text truncation
+            const descriptionEl = item.querySelector('div[style*="text-overflow"]');
+            if (descriptionEl) {
+                descriptionEl.style.maxWidth = '100%';
+                descriptionEl.style.overflow = 'hidden';
+                descriptionEl.style.textOverflow = 'ellipsis';
+                descriptionEl.style.whiteSpace = 'nowrap';
+            }
+            
+            // Adjust icon size
+            const icon = item.querySelector('.trans-icon');
+            if (icon) {
+                if (sizeCategory === 'xs') {
+                    icon.style.width = '44px';
+                    icon.style.height = '44px';
+                } else {
+                    icon.style.width = '48px';
+                    icon.style.height = '48px';
+                }
+            }
+        });
+    }
+
+    /**
+     * Adjust bottom navigation
+     */
+    adjustNavigation() {
+        const nav = document.querySelector('.bottom-nav');
+        if (!nav) return;
+        
+        const { safeAreaInsets, width } = this.viewport;
+        
+        // Adjust bottom padding for safe area
+        nav.style.paddingBottom = `${Math.max(20, safeAreaInsets.bottom + 8)}px`;
+        nav.style.paddingLeft = `${Math.max(20, safeAreaInsets.left)}px`;
+        nav.style.paddingRight = `${Math.max(20, safeAreaInsets.right)}px`;
+        
+        // Adjust nav item size based on screen width
+        const navItems = nav.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            if (width < this.breakpoints.sm) {
+                item.style.padding = '8px 12px';
+            } else {
+                item.style.padding = '8px 20px';
+            }
+        });
+        
+        // Ensure nav is always visible
+        nav.style.position = 'fixed';
+        nav.style.bottom = '0';
+        nav.style.left = '50%';
+        nav.style.transform = 'translateX(-50%)';
+        nav.style.zIndex = '100';
+    }
+
+    /**
+     * Adjust FAB position
+     */
+    adjustFAB() {
+        const fab = document.querySelector('.fab');
+        if (!fab) return;
+        
+        const { safeAreaInsets, width } = this.viewport;
+        
+        // Position FAB with safe areas
+        const navHeight = 76 + safeAreaInsets.bottom;
+        fab.style.bottom = `${navHeight + 20}px`;
+        fab.style.right = `${Math.max(24, safeAreaInsets.right + 16)}px`;
+        
+        // Adjust FAB size for small screens
+        if (width < this.breakpoints.sm) {
+            fab.style.width = '52px';
+            fab.style.height = '52px';
+        } else {
+            fab.style.width = '56px';
+            fab.style.height = '56px';
+        }
+    }
+
+    /**
+     * Adjust modal sheet
+     */
+    adjustModal() {
+        const modal = document.querySelector('.modal-content');
+        if (!modal) return;
+        
+        const { height, safeAreaInsets } = this.viewport;
+        
+        // Set max height accounting for safe areas
+        modal.style.maxHeight = `${height - safeAreaInsets.top - 40}px`;
+        modal.style.paddingBottom = `${Math.max(24, safeAreaInsets.bottom + 16)}px`;
+        
+        // Ensure proper scrolling
+        modal.style.overflowY = 'auto';
+        modal.style.overflowX = 'hidden';
+    }
+
+    /**
+     * Adjust lock screen
+     */
+    adjustLockScreen() {
+        const lockScreen = document.querySelector('.lock-screen');
+        if (!lockScreen) return;
+        
+        const { height, safeAreaInsets, sizeCategory } = this.viewport;
+        
+        // Adjust padding
+        lockScreen.style.paddingTop = `${safeAreaInsets.top + 32}px`;
+        lockScreen.style.paddingBottom = `${safeAreaInsets.bottom + 32}px`;
+        
+        // Adjust numpad size for small screens
+        const numpad = lockScreen.querySelector('.numpad');
+        if (numpad && sizeCategory === 'xs') {
+            numpad.style.maxWidth = '240px';
+            const keys = numpad.querySelectorAll('.numpad-key');
+            keys.forEach(key => {
+                key.style.fontSize = '20px';
+            });
+        }
+    }
+
+    /**
+     * Adjust form elements
+     */
+    adjustFormElements() {
+        const inputs = document.querySelectorAll('.form-field, input, select, textarea');
+        const { sizeCategory } = this.viewport;
+        
+        inputs.forEach(input => {
+            // Adjust padding for small screens
+            if (sizeCategory === 'xs') {
+                input.style.padding = '12px 14px';
+                input.style.fontSize = '14px';
+            } else {
+                input.style.padding = '14px 16px';
+                input.style.fontSize = '15px';
+            }
+            
+            // Prevent zoom on focus (iOS)
+            if (parseFloat(input.style.fontSize) < 16) {
+                input.style.fontSize = '16px';
+            }
+        });
+    }
+
+    /**
+     * Prevent overflow on all containers
+     */
+    preventOverflow() {
+        const { width } = this.viewport;
+        
+        // Apply to all major containers
+        const containers = document.querySelectorAll('.app, .page, .card, .box, .transaction-item, .settings-item');
+        
+        containers.forEach(container => {
+            container.style.maxWidth = '100%';
+            container.style.boxSizing = 'border-box';
+            container.style.overflowX = 'hidden';
+            
+            // Ensure word wrapping
+            const textElements = container.querySelectorAll('p, span, div');
+            textElements.forEach(el => {
+                if (!el.style.whiteSpace || el.style.whiteSpace !== 'nowrap') {
+                    el.style.wordWrap = 'break-word';
+                    el.style.overflowWrap = 'break-word';
+                }
+            });
+        });
+        
+        // Ensure app container fits
+        const app = document.querySelector('.app');
+        if (app) {
+            app.style.maxWidth = width < 480 ? '100%' : '480px';
+            app.style.width = '100%';
+            app.style.margin = '0 auto';
+        }
+    }
+
+    /**
+     * Setup event listeners for dynamic adjustments
+     */
+    setupEventListeners() {
+        // Debounce function
+        let resizeTimer;
+        const debounce = (func, delay) => {
+            return function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(func, delay);
+            };
+        };
+        
+        // Handle resize
+        window.addEventListener('resize', debounce(() => {
+            this.detectViewport();
+            this.applyResponsiveStyles();
+            this.adjustAllElements();
+            console.log('📐 Viewport Resized');
+        }, 200));
+        
+        // Handle orientation change
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.detectViewport();
+                this.applyResponsiveStyles();
+                this.adjustAllElements();
+                console.log('🔄 Orientation Changed');
+            }, 100);
+        });
+        
+        // Handle viewport resize (mobile address bar show/hide)
+        if ('visualViewport' in window) {
+            window.visualViewport.addEventListener('resize', debounce(() => {
+                this.handleVisualViewportChange();
+            }, 100));
+        }
+        
+        // Handle scroll to adjust for URL bar
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', debounce(() => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (Math.abs(scrollTop - lastScrollTop) > 50) {
+                this.adjustForURLBar();
+                lastScrollTop = scrollTop;
+            }
+        }, 100));
+    }
+
+    /**
+     * Handle visual viewport changes (iOS Safari)
+     */
+    handleVisualViewportChange() {
+        if (!window.visualViewport) return;
+        
+        const visualHeight = window.visualViewport.height;
+        const layoutHeight = document.documentElement.clientHeight;
+        
+        // Detect keyboard
+        const keyboardVisible = visualHeight < layoutHeight * 0.75;
+        
+        if (keyboardVisible) {
+            // Adjust for keyboard
+            const modal = document.querySelector('.modal-content');
+            if (modal) {
+                modal.style.maxHeight = `${visualHeight - 80}px`;
+            }
+        } else {
+            // Reset
+            this.adjustModal();
+        }
+    }
+
+    /**
+     * Adjust for URL bar show/hide
+     */
+    adjustForURLBar() {
+        const currentHeight = window.innerHeight;
+        if (Math.abs(currentHeight - this.viewport.height) > 50) {
+            this.viewport.height = currentHeight;
+            document.documentElement.style.setProperty('--vh-real', `${currentHeight}px`);
+        }
+    }
+
+    /**
+     * Get current viewport info
+     */
+    getViewportInfo() {
+        return this.viewport;
+    }
+
+    /**
+     * Manually trigger adjustment
+     */
+    refresh() {
+        this.detectViewport();
+        this.applyResponsiveStyles();
+        this.adjustAllElements();
+        console.log('🔄 Viewport Manager Refreshed');
+    }
+}
+
+// Initialize the viewport manager
+let viewportManager;
+
+// Add to your existing init function or create new one
+function initViewportManager() {
+    viewportManager = new MobileViewportManager();
+    
+    // Make it globally accessible
+    window.viewportManager = viewportManager;
+    
+    console.log('✅ Mobile Viewport Manager Initialized');
+    console.log('📱 Device Info:', viewportManager.getViewportInfo());
+}
+
+// Call after DOM is loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initViewportManager);
+} else {
+    initViewportManager();
+}
+
+// Add CSS for responsive utilities
+const responsiveStyles = document.createElement('style');
+responsiveStyles.textContent = `
+    /* Responsive utility classes */
+    .responsive-text {
+        font-size: clamp(14px, calc(var(--font-base) * 1px), 18px);
+    }
+    
+    .responsive-padding {
+        padding: var(--container-padding);
+    }
+    
+    .safe-area-top {
+        padding-top: calc(var(--sat) + 16px);
+    }
+    
+    .safe-area-bottom {
+        padding-bottom: calc(var(--sab) + 16px);
+    }
+    
+    /* Prevent overflow globally */
+    * {
+        box-sizing: border-box;
+    }
+    
+    img, video {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Ensure scrollable containers */
+    .page {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    /* Size-specific adjustments */
+    [data-size="xs"] .balance-card {
+        padding: 24px 18px !important;
+    }
+    
+    [data-size="xs"] .heading {
+        font-size: 18px !important;
+    }
+    
+    [data-size="xs"] .transaction-item {
+        padding: 12px !important;
+    }
+    
+    /* Notch adjustments */
+    [data-notch="true"] .lock-screen {
+        padding-top: calc(var(--sat) + 40px) !important;
+    }
+    
+    /* Landscape optimizations */
+    [data-orientation="landscape"] .page {
+        padding-bottom: 100px !important;
+    }
+    
+    /* Touch-friendly spacing */
+    @media (hover: none) and (pointer: coarse) {
+        button, a, .clickable {
+            min-height: 44px;
+            min-width: 44px;
+        }
+    }
+`;
+
+document.head.appendChild(responsiveStyles);
+
+
+    </script>
+</body>
+</html>
