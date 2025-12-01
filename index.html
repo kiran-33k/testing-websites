@@ -457,18 +457,18 @@ async function saveToSupabase(name1, name2, result, resultTitle) {
             ]);
 
         if (error) {
-            console.error('Error saving to Supabase:', error);
+            // Silent fail - no console error shown to user
             return false;
         } else {
-            console.log('Successfully saved to Supabase!', data);
-            showSuccessToast();
+            // Silent success - no notification
             return true;
         }
     } catch (err) {
-        console.error('Exception saving to Supabase:', err);
+        // Silent fail - no console error shown to user
         return false;
     }
 }
+
 
 function showSuccessToast() {
     const toast = document.getElementById('successToast');
